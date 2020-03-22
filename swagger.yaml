@@ -313,6 +313,10 @@ paths:
           description: "Invalid username supplied"
         404:
           description: "User not found"
+      security:
+      - auth:
+        - "write:items"
+        - "read:items"
 
     put:
       tags:
@@ -339,6 +343,10 @@ paths:
           description: "Invalid user supplied"
         404:
           description: "User not found"
+      security:
+      - auth:
+        - "write:items"
+        - "read:items"
 
     delete:
       tags:
@@ -359,6 +367,10 @@ paths:
           description: "Invalid username supplied"
         404:
           description: "User not found"
+      security:
+      - auth:
+        - "write:items"
+        - "read:items"
 
   /category:
 
@@ -380,6 +392,10 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/Category"
+      security:
+      - auth:
+        - "write:items"
+        - "read:items"
 
     post:
       tags:
@@ -455,6 +471,10 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/Package"
+      security:
+      - auth:
+        - "write:items"
+        - "read:items"
 
     post:
       tags:
@@ -562,6 +582,10 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/Storage"
+      security:
+      - auth:
+        - "write:items"
+        - "read:items"
 
 
     post:
@@ -825,3 +849,4 @@ definitions:
 externalDocs:
   description: "Find out more about Electroventory"
   url: "http://url/for/documantation"
+
