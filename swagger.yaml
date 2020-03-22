@@ -1,0 +1,827 @@
+swagger: "2.0"
+info:
+  description: "This is an Inventory system server which let's you handle all resources from the API."
+  version: "0.1.0"
+  title: "Electroventory API"
+  contact:
+    email: "juanernestobiondi@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "electroventory.juanbiondi.com"
+basePath: "/api"
+tags:
+- name: "item"
+  description: "Everything about your inventory"
+- name: "storage"
+  description: "Access to storages information on your inventory"
+- name: "category"
+  description: "Access to categories information on your inventory"
+- name: "package"
+  description: "Access to packages information on your inventory"
+- name: "user"
+  description: "Operations about user"
+schemes:
+- "https"
+- "http"
+paths:
+
+  /item:
+
+    post:
+      tags:
+      - "item"
+      summary: "Add a new item to the inventory"
+      description: ""
+      operationId: "add_item"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Item object that needs to be added to the inventory"
+        required: true
+        schema:
+          $ref: "#/definitions/Item"
+      responses:
+        405:
+          description: "Invalid input"
+      security:
+      - auth:
+        - "write:items"
+        - "read:items"
+
+    put:
+      tags:
+      - "item"
+      summary: "Update an existing item"
+      description: ""
+      operationId: "update_item"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Item object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Item"
+      responses:
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Item not found"
+        405:
+          description: "Validation exception"
+      security:
+      - auth:
+        - "write:items"
+        - "read:items"
+
+  /item/{item_id}:
+
+    get:
+      tags:
+      - "item"
+      summary: "Find pet by ID"
+      description: "Returns a single item"
+      operationId: "getItemById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "item_id"
+        in: "path"
+        description: "ID of item to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Item"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Item not found"
+      security:
+      - api_key: []
+
+    post:
+      tags:
+      - "item"
+      summary: "Updates a item in the inventory with form data"
+      description: ""
+      operationId: "updateItemWithForm"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "item_id"
+        in: "path"
+        description: "ID of item that needs to be updated"
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "name"
+        in: "formData"
+        description: "Updated name of the item"
+        required: false
+        type: "string"
+      - name: "status"
+        in: "formData"
+        description: "Updated status of the item"
+        required: false
+        type: "string"
+      responses:
+        405:
+          description: "Invalid input"
+      security:
+      - auth:
+        - "write:items"
+        - "read:items"
+
+    delete:
+      tags:
+      - "item"
+      summary: "Deletes a item"
+      description: ""
+      operationId: "delete_item"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "api_key"
+        in: "header"
+        required: false
+        type: "string"
+      - name: "item_id"
+        in: "path"
+        description: "Item id to delete"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Item not found"
+      security:
+      - auth:
+        - "write:items"
+        - "read:items"
+
+  /item/{item_id}/upload_image:
+
+    post:
+      tags:
+      - "item"
+      summary: "uploads an image"
+      description: ""
+      operationId: "upload_file"
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "item_id"
+        in: "path"
+        description: "ID of item to update"
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "additionalMetadata"
+        in: "formData"
+        description: "Additional data to pass to server"
+        required: false
+        type: "string"
+      - name: "file"
+        in: "formData"
+        description: "file to upload"
+        required: false
+        type: "file"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+      security:
+      - auth:
+        - "write:items"
+        - "read:items"
+
+  /user:
+
+    post:
+      tags:
+      - "user"
+      summary: "Create user"
+      description: "This can only be done by the logged in user."
+      operationId: "createUser"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Created user object"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        default:
+          description: "successful operation"
+
+  /user/login:
+
+    get:
+      tags:
+      - "user"
+      summary: "Logs user into the system"
+      description: ""
+      operationId: "loginUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "query"
+        description: "The user name for login"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "query"
+        description: "The password for login in clear text"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "string"
+          headers:
+            X-Rate-Limit:
+              type: "integer"
+              format: "int32"
+              description: "calls per hour allowed by the user"
+            X-Expires-After:
+              type: "string"
+              format: "date-time"
+              description: "date in UTC when token expires"
+        400:
+          description: "Invalid username/password supplied"
+
+  /user/logout:
+
+    get:
+      tags:
+      - "user"
+      summary: "Logs out current logged in user session"
+      description: ""
+      operationId: "logoutUser"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        default:
+          description: "successful operation"
+
+  /user/{username}:
+
+    get:
+      tags:
+      - "user"
+      summary: "Get user by user name"
+      description: ""
+      operationId: "getUserByName"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "path"
+        description: "The name that needs to be fetched. Use user1 for testing. "
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: "Invalid username supplied"
+        404:
+          description: "User not found"
+
+    put:
+      tags:
+      - "user"
+      summary: "Updated user"
+      description: "This can only be done by the logged in user."
+      operationId: "updateUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "path"
+        description: "name that need to be updated"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Updated user object"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        400:
+          description: "Invalid user supplied"
+        404:
+          description: "User not found"
+
+    delete:
+      tags:
+      - "user"
+      summary: "Delete user"
+      description: "This can only be done by the logged in user."
+      operationId: "deleteUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "path"
+        description: "The name that needs to be deleted"
+        required: true
+        type: "string"
+      responses:
+        400:
+          description: "Invalid username supplied"
+        404:
+          description: "User not found"
+
+  /category:
+
+    get:
+      tags:
+      - "category"
+      summary: ""
+      description: ""
+      operationId: "get_all_category"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: ""
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Category"
+
+    post:
+      tags:
+      - "category"
+      summary: "Add a new storage in the category"
+      description: ""
+      operationId: "add_category"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        description: "Item object that needs to be added to the inventory"
+        schema:
+          $ref: "#/definitions/Category"
+      responses:
+        405:
+          description: "Invalid input"
+      security:
+      - auth:
+        - "write:items"
+        - "read:items"
+
+    put:
+      tags:
+      - "category"
+      summary: "Update an existing category"
+      description: ""
+      operationId: "update_category"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Category object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Category"
+      responses:
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Storage not found"
+        405:
+          description: "Validation exception"
+      security:
+      - auth:
+        - "write:items"
+        - "read:items"
+
+  /package:
+
+    get:
+      tags:
+      - "package"
+      summary: ""
+      description: ""
+      operationId: "get_all_package"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: ""
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Package"
+
+    post:
+      tags:
+      - "package"
+      summary: "Add a new storage in the package"
+      description: ""
+      operationId: "add_package"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        description: "Package object that needs to be added to the inventory"
+        schema:
+          $ref: "#/definitions/Package"
+      responses:
+        405:
+          description: "Invalid input"
+      security:
+      - auth:
+        - "write:items"
+        - "read:items"
+
+    put:
+      tags:
+      - "package"
+      summary: "Update an existing package"
+      description: ""
+      operationId: "update_package"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Package object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Package"
+      responses:
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Package not found"
+        405:
+          description: "Validation exception"
+      security:
+      - auth:
+        - "write:items"
+        - "read:items"
+
+  /category/{category_id}:
+
+    get:
+      tags:
+      - "category"
+      summary: "Returns a single category."
+      description: ""
+      operationId: "get_category_id"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "category_id"
+        type: "integer"
+        description: "ID of the category to add"
+        required: true
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Category"
+        400:
+          description: "Invalid category supplied"
+        404:
+          description: "User not found"
+      security:
+      - auth:
+        - "write:items"
+        - "read:items"
+
+  /storage:
+
+    get:
+      tags:
+      - "storage"
+      summary: ""
+      description: ""
+      operationId: "get_all_storage"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: ""
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Storage"
+
+
+    post:
+      tags:
+      - "storage"
+      summary: "Add a new storage in the inventory"
+      description: ""
+      operationId: "add_storage"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        description: "Item object that needs to be added to the inventory"
+        schema:
+          $ref: "#/definitions/Storage"
+      responses:
+        405:
+          description: "Invalid input"
+      security:
+      - auth:
+        - "write:items"
+        - "read:items"
+
+    put:
+      tags:
+      - "storage"
+      summary: "Update an existing storage"
+      description: ""
+      operationId: "update_storage"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Storage object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Storage"
+      responses:
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Storage not found"
+        405:
+          description: "Validation exception"
+      security:
+      - auth:
+        - "write:items"
+        - "read:items"
+
+  /storage/{storage_id}:
+
+    get:
+      tags:
+      - "storage"
+      summary: "Returns a single storage."
+      description: ""
+      operationId: "get_storage_id"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "storage_id"
+        type: "integer"
+        description: "ID of the category to add"
+        required: true
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Storage"
+        400:
+          description: "Invalid category supplied"
+        404:
+          description: "User not found"
+      security:
+      - auth:
+        - "write:items"
+        - "read:items"
+
+securityDefinitions:
+  auth:
+    type: "oauth2"
+    authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
+    flow: "implicit"
+    scopes:
+      write:items: "modify items in your account"
+      read:items: "read your items"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+
+definitions:
+
+  Category:
+    type: "object"
+    required:
+      - "name"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+        readOnly: true
+      name:
+        type: "string"
+        example: "Boards"
+      description:
+        type: "string"
+        example: "Boards assembled"
+      items:
+        type: "array"
+        items:
+          type: "string"
+        example: ["Arduino microcontroller", "ESP8266"]
+
+  Package:
+    type: "object"
+    required:
+      - "name"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+        readOnly: true
+      name:
+        type: "string"
+        example: "Custom package"
+      description:
+        type: "string"
+      width:
+        type: "number"
+        format: "float"
+        example: 3.9
+      height:
+        type: "number"
+        format: "float"
+        example: 2.6
+      length:
+        type: "number"
+        format: "float"
+        example: 1.3
+
+  Storage:
+    type: "object"
+    required:
+      - "name"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+        readOnly: true
+      name:
+        type: "string"
+        example: "bluebox"
+      description:
+        type: "string"
+      items:
+        type: "array"
+        items:
+          type: "string"
+        example: ["Arduino microcontroller", "ESP8266"]
+
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+        readOnly: true
+      username:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"
+    xml:
+      name: "User"
+
+  URL:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+        readOnly: true
+      link:
+        type: "string"
+        example: "https://url/to/other/link"
+      type:
+        type: "string"
+        example: "doc"
+
+  Tag:
+    type: "object"
+    required:
+      - "name"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+        readOnly: true
+      name:
+        type: "string"
+        example: "arduino"
+
+  Item:
+    type: "object"
+    required:
+    - "name"
+    - "urls"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+        readOnly: true
+      name:
+        type: "string"
+        example: "Arduino microcontroller"
+      description:
+        type: "string"
+        example: "Really long description of the example item in the inventory."
+      category:
+        $ref: "#/definitions/Category"
+      storage:
+        $ref: "#/definitions/Storage"
+      package:
+        $ref: "#/definitions/Package"
+      unit:
+        type: "string"
+        example: "units"
+      quantity:
+        type: "integer"
+        example: 3
+      urls:
+        type: "array"
+        items:
+          $ref: "#/definitions/URL"
+      tags:
+        type: "array"
+        items:
+          $ref: "#/definitions/Tag"
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
+externalDocs:
+  description: "Find out more about Electroventory"
+  url: "http://url/for/documantation"
