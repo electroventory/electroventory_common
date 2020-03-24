@@ -24,9 +24,39 @@ tags:
 schemes:
 - "https"
 - "http"
+
 paths:
 
   /item:
+
+    get:
+      tags:
+      - "item"
+      summary: "Retrieve all items on the inventory"
+      description: ""
+      operationId: "retrieve_items"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Item"
+        400:
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        404:
+          description: "Item not found"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+      security:
+      - auth:
+        - "write:items"
+        - "read:items"
 
     post:
       tags:
@@ -46,37 +76,16 @@ paths:
         schema:
           $ref: "#/definitions/Item"
       responses:
-        405:
-          description: "Invalid input"
-      security:
-      - auth:
-        - "write:items"
-        - "read:items"
-
-    put:
-      tags:
-      - "item"
-      summary: "Update an existing item"
-      description: ""
-      operationId: "update_item"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Item object that needs to be added to the store"
-        required: true
-        schema:
-          $ref: "#/definitions/Item"
-      responses:
+        201:
+          description: "Created"
         400:
-          description: "Invalid ID supplied"
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ApiResponse"
         404:
           description: "Item not found"
-        405:
-          description: "Validation exception"
+          schema:
+            $ref: "#/definitions/ApiResponse"
       security:
       - auth:
         - "write:items"
@@ -87,7 +96,7 @@ paths:
     get:
       tags:
       - "item"
-      summary: "Find pet by ID"
+      summary: "Find item by ID"
       description: "Returns a single item"
       operationId: "getItemById"
       produces:
@@ -105,9 +114,13 @@ paths:
           schema:
             $ref: "#/definitions/Item"
         400:
-          description: "Invalid ID supplied"
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ApiResponse"
         404:
           description: "Item not found"
+          schema:
+            $ref: "#/definitions/ApiResponse"
       security:
       - api_key: []
 
@@ -139,8 +152,57 @@ paths:
         required: false
         type: "string"
       responses:
+        201:
+          description: "Created"
+        400:
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        404:
+          description: "Item not found"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+      security:
+      - auth:
+        - "write:items"
+        - "read:items"
+
+    put:
+      tags:
+      - "item"
+      summary: "Update an existing item"
+      description: ""
+      operationId: "update_item"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "item_id"
+        in: "path"
+        description: "Item id to delete"
+        required: true
+        type: "integer"
+        format: "int64"
+      - in: "body"
+        name: "body"
+        description: "Item object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Item"
+      responses:
+        400:
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        404:
+          description: "Item not found"
+          schema:
+            $ref: "#/definitions/ApiResponse"
         405:
-          description: "Invalid input"
+          description: "Validation exception"
+          schema:
+            $ref: "#/definitions/ApiResponse"
       security:
       - auth:
         - "write:items"
@@ -167,9 +229,13 @@ paths:
         format: "int64"
       responses:
         400:
-          description: "Invalid ID supplied"
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ApiResponse"
         404:
           description: "Item not found"
+          schema:
+            $ref: "#/definitions/ApiResponse"
       security:
       - auth:
         - "write:items"
@@ -180,7 +246,7 @@ paths:
     post:
       tags:
       - "item"
-      summary: "uploads an image"
+      summary: "Uploads an image"
       description: ""
       operationId: "upload_file"
       consumes:
@@ -205,8 +271,14 @@ paths:
         required: false
         type: "file"
       responses:
-        200:
-          description: "successful operation"
+        201:
+          description: "Created"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        401:
+          description: "Unauthorized"
           schema:
             $ref: "#/definitions/ApiResponse"
       security:
@@ -232,8 +304,16 @@ paths:
         schema:
           $ref: "#/definitions/User"
       responses:
-        default:
-          description: "successful operation"
+        201:
+          description: "Created"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ApiResponse"
 
   /user/login:
 
@@ -272,6 +352,8 @@ paths:
               description: "date in UTC when token expires"
         400:
           description: "Invalid username/password supplied"
+          schema:
+            $ref: "#/definitions/ApiResponse"
 
   /user/logout:
 
@@ -311,8 +393,12 @@ paths:
             $ref: "#/definitions/User"
         400:
           description: "Invalid username supplied"
+          schema:
+            $ref: "#/definitions/ApiResponse"
         404:
           description: "User not found"
+          schema:
+            $ref: "#/definitions/ApiResponse"
       security:
       - auth:
         - "write:items"
@@ -341,8 +427,12 @@ paths:
       responses:
         400:
           description: "Invalid user supplied"
+          schema:
+            $ref: "#/definitions/ApiResponse"
         404:
           description: "User not found"
+          schema:
+            $ref: "#/definitions/ApiResponse"
       security:
       - auth:
         - "write:items"
@@ -365,8 +455,12 @@ paths:
       responses:
         400:
           description: "Invalid username supplied"
+          schema:
+            $ref: "#/definitions/ApiResponse"
         404:
           description: "User not found"
+          schema:
+            $ref: "#/definitions/ApiResponse"
       security:
       - auth:
         - "write:items"
@@ -387,11 +481,17 @@ paths:
       parameters: []
       responses:
         200:
-          description: ""
+          description: "successful operation"
           schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Category"
+            $ref: "#/definitions/Category"
+        400:
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        404:
+          description: "Item not found"
+          schema:
+            $ref: "#/definitions/ApiResponse"
       security:
       - auth:
         - "write:items"
@@ -408,6 +508,11 @@ paths:
       produces:
       - "application/json"
       parameters:
+      - in: "path"
+        name: "category_id"
+        type: "integer"
+        description: "ID of the category to add"
+        required: true
       - in: "body"
         name: "body"
         required: true
@@ -415,8 +520,54 @@ paths:
         schema:
           $ref: "#/definitions/Category"
       responses:
-        405:
-          description: "Invalid input"
+        201:
+          description: "Created"
+          schema:
+            $ref: "#/definitions/Category"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+      security:
+      - auth:
+        - "write:items"
+        - "read:items"
+
+  /category/{category_id}:
+
+    get:
+      tags:
+      - "category"
+      summary: "Get a single category."
+      description: ""
+      operationId: "get_category_id"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "category_id"
+        type: "integer"
+        description: "ID of the category to add"
+        required: true
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Category"
+        400:
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        404:
+          description: "Item not found"
+          schema:
+            $ref: "#/definitions/ApiResponse"
       security:
       - auth:
         - "write:items"
@@ -433,6 +584,11 @@ paths:
       produces:
       - "application/json"
       parameters:
+      - in: "path"
+        name: "category_id"
+        type: "integer"
+        description: "ID of the category to add"
+        required: true
       - in: "body"
         name: "body"
         description: "Category object that needs to be added to the store"
@@ -442,10 +598,16 @@ paths:
       responses:
         400:
           description: "Invalid ID supplied"
+          schema:
+            $ref: "#/definitions/ApiResponse"
         404:
           description: "Storage not found"
+          schema:
+            $ref: "#/definitions/ApiResponse"
         405:
           description: "Validation exception"
+          schema:
+            $ref: "#/definitions/ApiResponse"
       security:
       - auth:
         - "write:items"
@@ -466,11 +628,17 @@ paths:
       parameters: []
       responses:
         200:
-          description: ""
+          description: "successful operation"
           schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Package"
+            $ref: "#/definitions/Package"
+        400:
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        404:
+          description: "Item not found"
+          schema:
+            $ref: "#/definitions/ApiResponse"
       security:
       - auth:
         - "write:items"
@@ -494,8 +662,53 @@ paths:
         schema:
           $ref: "#/definitions/Package"
       responses:
-        405:
-          description: "Invalid input"
+        201:
+          description: "Created"
+          schema:
+            $ref: "#/definitions/Package"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+      security:
+      - auth:
+        - "write:items"
+        - "read:items"
+
+  /package/{package_id}:
+    get:
+      tags:
+      - "package"
+      summary: "Get single package."
+      description: ""
+      operationId: "get_single_package"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "package_id"
+        type: "integer"
+        description: "ID of the category to add"
+        required: true
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Package"
+        400:
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        404:
+          description: "Item not found"
+          schema:
+            $ref: "#/definitions/ApiResponse"
       security:
       - auth:
         - "write:items"
@@ -512,6 +725,11 @@ paths:
       produces:
       - "application/json"
       parameters:
+      - in: "path"
+        name: "package_id"
+        type: "integer"
+        description: "ID of the category to add"
+        required: true
       - in: "body"
         name: "body"
         description: "Package object that needs to be added to the store"
@@ -521,42 +739,16 @@ paths:
       responses:
         400:
           description: "Invalid ID supplied"
+          schema:
+            $ref: "#/definitions/ApiResponse"
         404:
           description: "Package not found"
+          schema:
+            $ref: "#/definitions/ApiResponse"
         405:
           description: "Validation exception"
-      security:
-      - auth:
-        - "write:items"
-        - "read:items"
-
-  /category/{category_id}:
-
-    get:
-      tags:
-      - "category"
-      summary: "Returns a single category."
-      description: ""
-      operationId: "get_category_id"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "path"
-        name: "category_id"
-        type: "integer"
-        description: "ID of the category to add"
-        required: true
-      responses:
-        200:
-          description: "successful operation"
           schema:
-            $ref: "#/definitions/Category"
-        400:
-          description: "Invalid category supplied"
-        404:
-          description: "User not found"
+            $ref: "#/definitions/ApiResponse"
       security:
       - auth:
         - "write:items"
@@ -577,16 +769,21 @@ paths:
       parameters: []
       responses:
         200:
-          description: ""
+          description: "successful operation"
           schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Storage"
+            $ref: "#/definitions/Storage"
+        400:
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        404:
+          description: "Item not found"
+          schema:
+            $ref: "#/definitions/ApiResponse"
       security:
       - auth:
         - "write:items"
         - "read:items"
-
 
     post:
       tags:
@@ -599,6 +796,11 @@ paths:
       produces:
       - "application/json"
       parameters:
+      - in: "path"
+        name: "storage_id"
+        type: "integer"
+        description: "ID of the category to add"
+        required: true
       - in: "body"
         name: "body"
         required: true
@@ -606,37 +808,18 @@ paths:
         schema:
           $ref: "#/definitions/Storage"
       responses:
-        405:
-          description: "Invalid input"
-      security:
-      - auth:
-        - "write:items"
-        - "read:items"
-
-    put:
-      tags:
-      - "storage"
-      summary: "Update an existing storage"
-      description: ""
-      operationId: "update_storage"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Storage object that needs to be added to the store"
-        required: true
-        schema:
-          $ref: "#/definitions/Storage"
-      responses:
+        201:
+          description: "Created"
+          schema:
+            $ref: "#/definitions/Storage"
         400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Storage not found"
-        405:
-          description: "Validation exception"
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ApiResponse"
       security:
       - auth:
         - "write:items"
@@ -666,9 +849,53 @@ paths:
           schema:
             $ref: "#/definitions/Storage"
         400:
-          description: "Invalid category supplied"
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/ApiResponse"
         404:
-          description: "User not found"
+          description: "Item not found"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+      security:
+      - auth:
+        - "write:items"
+        - "read:items"
+
+    put:
+      tags:
+      - "storage"
+      summary: "Update an existing storage"
+      description: ""
+      operationId: "update_storage"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "storage_id"
+        type: "integer"
+        description: "ID of the category to add"
+        required: true
+      - in: "body"
+        name: "body"
+        description: "Storage object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Storage"
+      responses:
+        400:
+          description: "Invalid ID supplied"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        404:
+          description: "Storage not found"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        405:
+          description: "Validation exception"
+          schema:
+            $ref: "#/definitions/ApiResponse"
       security:
       - auth:
         - "write:items"
@@ -704,11 +931,6 @@ definitions:
       description:
         type: "string"
         example: "Boards assembled"
-      items:
-        type: "array"
-        items:
-          type: "string"
-        example: ["Arduino microcontroller", "ESP8266"]
 
   Package:
     type: "object"
@@ -751,11 +973,7 @@ definitions:
         example: "bluebox"
       description:
         type: "string"
-      items:
-        type: "array"
-        items:
-          type: "string"
-        example: ["Arduino microcontroller", "ESP8266"]
+
 
   User:
     type: "object"
@@ -836,16 +1054,21 @@ definitions:
         type: "array"
         items:
           $ref: "#/definitions/Tag"
+
   ApiResponse:
     type: "object"
     properties:
       code:
         type: "integer"
         format: "int32"
+        example: "xxx"
       type:
         type: "string"
+        example: "An error has occurred."
       message:
         type: "string"
+        example: "Long description of the error."
+
 externalDocs:
   description: "Find out more about Electroventory"
   url: "http://url/for/documantation"
