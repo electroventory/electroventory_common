@@ -11,15 +11,15 @@ info:
 host: "electroventory.juanbiondi.com"
 basePath: "/api"
 tags:
-- name: "item"
+- name: "items"
   description: "Everything about your inventory"
-- name: "storage"
+- name: "storages"
   description: "Access to storages information on your inventory"
-- name: "category"
+- name: "categories"
   description: "Access to categories information on your inventory"
-- name: "package"
+- name: "packages"
   description: "Access to packages information on your inventory"
-- name: "user"
+- name: "users"
   description: "Operations about user"
 schemes:
 - "https"
@@ -27,11 +27,11 @@ schemes:
 
 paths:
 
-  /item:
+  /items:
 
     get:
       tags:
-      - "item"
+      - "items"
       summary: "Retrieve all items on the inventory"
       description: ""
       operationId: "retrieve_items"
@@ -60,7 +60,7 @@ paths:
 
     post:
       tags:
-      - "item"
+      - "items"
       summary: "Add a new item to the inventory"
       description: ""
       operationId: "add_item"
@@ -91,11 +91,11 @@ paths:
         - "write:items"
         - "read:items"
 
-  /item/{item_id}:
+  /items/{item_id}:
 
     get:
       tags:
-      - "item"
+      - "items"
       summary: "Find item by ID"
       description: "Returns a single item"
       operationId: "getItemById"
@@ -126,7 +126,7 @@ paths:
 
     post:
       tags:
-      - "item"
+      - "items"
       summary: "Updates a item in the inventory with form data"
       description: ""
       operationId: "updateItemWithForm"
@@ -169,7 +169,7 @@ paths:
 
     put:
       tags:
-      - "item"
+      - "items"
       summary: "Update an existing item"
       description: ""
       operationId: "update_item"
@@ -210,7 +210,7 @@ paths:
 
     delete:
       tags:
-      - "item"
+      - "items"
       summary: "Deletes a item"
       description: ""
       operationId: "delete_item"
@@ -241,11 +241,11 @@ paths:
         - "write:items"
         - "read:items"
 
-  /item/{item_id}/upload_image:
+  /items/{item_id}/upload_image:
 
     post:
       tags:
-      - "item"
+      - "items"
       summary: "Uploads an image"
       description: ""
       operationId: "upload_file"
@@ -286,11 +286,11 @@ paths:
         - "write:items"
         - "read:items"
 
-  /user:
+  /users:
 
     post:
       tags:
-      - "user"
+      - "users"
       summary: "Create user"
       description: "This can only be done by the logged in user."
       operationId: "createUser"
@@ -315,11 +315,11 @@ paths:
           schema:
             $ref: "#/definitions/ApiResponse"
 
-  /user/login:
+  /users/login:
 
     get:
       tags:
-      - "user"
+      - "users"
       summary: "Logs user into the system"
       description: ""
       operationId: "loginUser"
@@ -355,11 +355,11 @@ paths:
           schema:
             $ref: "#/definitions/ApiResponse"
 
-  /user/logout:
+  /users/logout:
 
     get:
       tags:
-      - "user"
+      - "users"
       summary: "Logs out current logged in user session"
       description: ""
       operationId: "logoutUser"
@@ -370,11 +370,11 @@ paths:
         default:
           description: "successful operation"
 
-  /user/{username}:
+  /users/{username}:
 
     get:
       tags:
-      - "user"
+      - "users"
       summary: "Get user by user name"
       description: ""
       operationId: "getUserByName"
@@ -406,7 +406,7 @@ paths:
 
     put:
       tags:
-      - "user"
+      - "users"
       summary: "Updated user"
       description: "This can only be done by the logged in user."
       operationId: "updateUser"
@@ -440,7 +440,7 @@ paths:
 
     delete:
       tags:
-      - "user"
+      - "users"
       summary: "Delete user"
       description: "This can only be done by the logged in user."
       operationId: "deleteUser"
@@ -466,11 +466,11 @@ paths:
         - "write:items"
         - "read:items"
 
-  /category:
+  /categories:
 
     get:
       tags:
-      - "category"
+      - "categories"
       summary: ""
       description: ""
       operationId: "get_all_category"
@@ -499,7 +499,7 @@ paths:
 
     post:
       tags:
-      - "category"
+      - "categories"
       summary: "Add a new storage in the category"
       description: ""
       operationId: "add_category"
@@ -537,11 +537,11 @@ paths:
         - "write:items"
         - "read:items"
 
-  /category/{category_id}:
+  /categories/{category_id}:
 
     get:
       tags:
-      - "category"
+      - "categories"
       summary: "Get a single category."
       description: ""
       operationId: "get_category_id"
@@ -575,7 +575,7 @@ paths:
 
     put:
       tags:
-      - "category"
+      - "categories"
       summary: "Update an existing category"
       description: ""
       operationId: "update_category"
@@ -613,11 +613,11 @@ paths:
         - "write:items"
         - "read:items"
 
-  /package:
+  /packages:
 
     get:
       tags:
-      - "package"
+      - "packages"
       summary: ""
       description: ""
       operationId: "get_all_package"
@@ -646,7 +646,7 @@ paths:
 
     post:
       tags:
-      - "package"
+      - "packages"
       summary: "Add a new storage in the package"
       description: ""
       operationId: "add_package"
@@ -679,10 +679,10 @@ paths:
         - "write:items"
         - "read:items"
 
-  /package/{package_id}:
+  /packages/{package_id}:
     get:
       tags:
-      - "package"
+      - "packages"
       summary: "Get single package."
       description: ""
       operationId: "get_single_package"
@@ -716,7 +716,7 @@ paths:
 
     put:
       tags:
-      - "package"
+      - "packages"
       summary: "Update an existing package"
       description: ""
       operationId: "update_package"
@@ -754,11 +754,11 @@ paths:
         - "write:items"
         - "read:items"
 
-  /storage:
+  /storages:
 
     get:
       tags:
-      - "storage"
+      - "storages"
       summary: ""
       description: ""
       operationId: "get_all_storage"
@@ -787,7 +787,7 @@ paths:
 
     post:
       tags:
-      - "storage"
+      - "storages"
       summary: "Add a new storage in the inventory"
       description: ""
       operationId: "add_storage"
@@ -825,11 +825,11 @@ paths:
         - "write:items"
         - "read:items"
 
-  /storage/{storage_id}:
+  /storages/{storage_id}:
 
     get:
       tags:
-      - "storage"
+      - "storages"
       summary: "Returns a single storage."
       description: ""
       operationId: "get_storage_id"
@@ -863,7 +863,7 @@ paths:
 
     put:
       tags:
-      - "storage"
+      - "storages"
       summary: "Update an existing storage"
       description: ""
       operationId: "update_storage"
@@ -1071,5 +1071,4 @@ definitions:
 
 externalDocs:
   description: "Find out more about Electroventory"
-  url: "http://url/for/documantation"
-
+  url: "http://url/for/documentation"
