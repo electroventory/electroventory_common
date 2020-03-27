@@ -305,7 +305,7 @@ paths:
 
   /users/login:
 
-    get:
+    post:
       tags:
       - "users"
       summary: "Logs user into the system"
@@ -314,21 +314,29 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "username"
-        in: "query"
-        description: "The user name for login"
-        required: true
-        type: "string"
-      - name: "password"
-        in: "query"
+      - in: "body"
+        name: user
         description: "The password for login in clear text"
         required: true
-        type: "string"
+        schema:
+          type: object
+          required:
+            - username
+          properties:
+            username:
+              type: string
+              example: "user1"
+            password:
+              type: string
+              example: "@#%vbdW$%"
       responses:
-        200:
-          description: "successful operation"
+        201:
+          description: "Successful operation"
           schema:
-            type: "string"
+            type: "object"
+            properties:
+              api_key:
+                type: "string"
           headers:
             X-Rate-Limit:
               type: "integer"
