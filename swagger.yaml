@@ -54,9 +54,7 @@ paths:
           schema:
             $ref: "#/definitions/ApiResponse"
       security:
-      - auth:
-        - "write:items"
-        - "read:items"
+        - api_key: []
 
     post:
       tags:
@@ -87,9 +85,7 @@ paths:
           schema:
             $ref: "#/definitions/ApiResponse"
       security:
-      - auth:
-        - "write:items"
-        - "read:items"
+      - api_key: []
 
   /items/{item_id}:
 
@@ -163,9 +159,7 @@ paths:
           schema:
             $ref: "#/definitions/ApiResponse"
       security:
-      - auth:
-        - "write:items"
-        - "read:items"
+      - api_key: []
 
     put:
       tags:
@@ -204,9 +198,7 @@ paths:
           schema:
             $ref: "#/definitions/ApiResponse"
       security:
-      - auth:
-        - "write:items"
-        - "read:items"
+      - api_key: []
 
     delete:
       tags:
@@ -237,9 +229,7 @@ paths:
           schema:
             $ref: "#/definitions/ApiResponse"
       security:
-      - auth:
-        - "write:items"
-        - "read:items"
+      - api_key: []
 
   /items/{item_id}/upload_image:
 
@@ -282,9 +272,7 @@ paths:
           schema:
             $ref: "#/definitions/ApiResponse"
       security:
-      - auth:
-        - "write:items"
-        - "read:items"
+      - api_key: []
 
   /users:
 
@@ -369,6 +357,8 @@ paths:
       responses:
         default:
           description: "successful operation"
+      security:
+      - api_key: []
 
   /users/{username}:
 
@@ -400,9 +390,7 @@ paths:
           schema:
             $ref: "#/definitions/ApiResponse"
       security:
-      - auth:
-        - "write:items"
-        - "read:items"
+      - api_key: []
 
     put:
       tags:
@@ -434,9 +422,7 @@ paths:
           schema:
             $ref: "#/definitions/ApiResponse"
       security:
-      - auth:
-        - "write:items"
-        - "read:items"
+      - api_key: []
 
     delete:
       tags:
@@ -462,9 +448,7 @@ paths:
           schema:
             $ref: "#/definitions/ApiResponse"
       security:
-      - auth:
-        - "write:items"
-        - "read:items"
+      - api_key: []
 
   /categories:
 
@@ -493,9 +477,7 @@ paths:
           schema:
             $ref: "#/definitions/ApiResponse"
       security:
-      - auth:
-        - "write:items"
-        - "read:items"
+      - api_key: []
 
     post:
       tags:
@@ -533,9 +515,7 @@ paths:
           schema:
             $ref: "#/definitions/ApiResponse"
       security:
-      - auth:
-        - "write:items"
-        - "read:items"
+      - api_key: []
 
   /categories/{category_id}:
 
@@ -569,9 +549,7 @@ paths:
           schema:
             $ref: "#/definitions/ApiResponse"
       security:
-      - auth:
-        - "write:items"
-        - "read:items"
+      - api_key: []
 
     put:
       tags:
@@ -609,9 +587,7 @@ paths:
           schema:
             $ref: "#/definitions/ApiResponse"
       security:
-      - auth:
-        - "write:items"
-        - "read:items"
+      - api_key: []
 
   /packages:
 
@@ -640,9 +616,7 @@ paths:
           schema:
             $ref: "#/definitions/ApiResponse"
       security:
-      - auth:
-        - "write:items"
-        - "read:items"
+      - api_key: []
 
     post:
       tags:
@@ -675,9 +649,7 @@ paths:
           schema:
             $ref: "#/definitions/ApiResponse"
       security:
-      - auth:
-        - "write:items"
-        - "read:items"
+      - api_key: []
 
   /packages/{package_id}:
     get:
@@ -710,9 +682,7 @@ paths:
           schema:
             $ref: "#/definitions/ApiResponse"
       security:
-      - auth:
-        - "write:items"
-        - "read:items"
+      - api_key: []
 
     put:
       tags:
@@ -750,9 +720,7 @@ paths:
           schema:
             $ref: "#/definitions/ApiResponse"
       security:
-      - auth:
-        - "write:items"
-        - "read:items"
+      - api_key: []
 
   /storages:
 
@@ -781,9 +749,7 @@ paths:
           schema:
             $ref: "#/definitions/ApiResponse"
       security:
-      - auth:
-        - "write:items"
-        - "read:items"
+      - api_key: []
 
     post:
       tags:
@@ -821,9 +787,7 @@ paths:
           schema:
             $ref: "#/definitions/ApiResponse"
       security:
-      - auth:
-        - "write:items"
-        - "read:items"
+      - api_key: []
 
   /storages/{storage_id}:
 
@@ -857,9 +821,7 @@ paths:
           schema:
             $ref: "#/definitions/ApiResponse"
       security:
-      - auth:
-        - "write:items"
-        - "read:items"
+      - api_key: []
 
     put:
       tags:
@@ -897,9 +859,7 @@ paths:
           schema:
             $ref: "#/definitions/ApiResponse"
       security:
-      - auth:
-        - "write:items"
-        - "read:items"
+      - api_key: []
 
 securityDefinitions:
   auth:
@@ -910,7 +870,7 @@ securityDefinitions:
       write:items: "modify items in your account"
       read:items: "read your items"
   api_key:
-    type: "apiKey"
+    type: apiKey
     name: "api_key"
     in: "header"
 
@@ -973,6 +933,8 @@ definitions:
         example: "bluebox"
       description:
         type: "string"
+      label:
+        $ref: "#/definitions/Label"
 
 
   User:
@@ -1018,6 +980,18 @@ definitions:
         type: "string"
         example: "arduino"
 
+  Label:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        example: "5UP3R1D"
+      data:
+        type: "string"
+      path:
+        type: "string"
+        example: "/path/to/label"
+
   Item:
     type: "object"
     required:
@@ -1040,6 +1014,8 @@ definitions:
         $ref: "#/definitions/Storage"
       package:
         $ref: "#/definitions/Package"
+      label:
+        $ref: "#/definitions/Label"
       unit:
         type: "string"
         example: "units"
