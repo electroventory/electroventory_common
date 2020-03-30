@@ -23,3 +23,16 @@ Take into account the following image:
 
  - TravisCI: recommended for OpenSource and OS small projects. However, it runs on the cloud and it is not fully configurable. 
  - Jenkins: in case the project starts to grow a lot.
+
+## Deployment
+
+### Options
+
+ - Ansible: because I want to play with it.
+
+## Orchestration
+
+### Options
+
+- Kubernetes: let's try Docker with Kubernetes.
+ 
