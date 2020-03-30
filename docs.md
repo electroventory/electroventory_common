@@ -2,7 +2,7 @@
 
 Take into account the following image: 
 
-![](https://qph.fs.quoracdn.net/main-qimg-22babcb57b567c79374553f2f307905a)
+![](https://hostadvice.com/wp-content/uploads/2018/03/devopsext.jpg)
 
 
 ## Build
