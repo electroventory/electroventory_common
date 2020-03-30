@@ -10,3 +10,16 @@ Take into account the following image:
 ### Options
 
  - pyBuilder: this seems to be the good one ([https://pybuilder.io/](https://pybuilder.io/))
+ 
+## Test
+
+### Options
+
+ - pyTest
+ 
+## Integration
+
+### Options
+
+ - TravisCI: recommended for OpenSource and OS small projects. However, it runs on the cloud and it is not fully configurable. 
+ - Jenkins: in case the project starts to grow a lot.
