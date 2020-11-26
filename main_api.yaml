@@ -1,0 +1,1013 @@
+openapi: 3.0.2
+
+info:
+  title: Electroventory API
+  description: This is an Inventory system server which let's you handle all resources
+    from the API.
+  contact:
+    email: juanernestobiondi@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.1.0
+
+externalDocs:
+  description: Find out more about Electroventory
+  url: http://url/for/documentation
+
+servers:
+- url: https://electroventory.juanbiondi.com/api
+
+tags:
+- name: items
+  description: Everything about your inventory
+- name: storages
+  description: Access to storages information on your inventory
+- name: categories
+  description: Access to categories information on your inventory
+- name: packages
+  description: Access to packages information on your inventory
+- name: users
+  description: Operations about user
+
+paths:
+
+  /items:
+    get:
+      tags:
+      - items
+      summary: Retrieve all items on the inventory
+      operationId: retrieve_items
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"
+        '404':
+          $ref: "#/components/responses/404"
+      security:
+        - BearerAuth: [BearerAuth]
+
+    post:
+      tags:
+      - items
+      summary: Add a new item to the inventory
+      operationId: add_item
+      requestBody:
+        description: Item object that needs to be added to the inventory
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ItemRequest"
+        required: true
+      responses:
+        201:
+          description: Created
+          content: 
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"
+        '404':
+          $ref: "#/components/responses/404"
+      security:
+        - BearerAuth: [BearerAuth]
+      x-codegen-request-body-name: body
+      
+  /items/{item_id}:
+    get:
+      tags:
+      - items
+      summary: Find item by ID
+      description: Returns a single item
+      operationId: getItemById
+      parameters:
+      - name: item_id
+        in: path
+        description: ID of item to return
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"
+        '404':
+          $ref: "#/components/responses/404"
+      security:
+        - BearerAuth: [BearerAuth]
+
+    put:
+      tags:
+      - items
+      summary: Update an existing item
+      operationId: update_item
+      parameters:
+      - name: item_id
+        in: path
+        description: Item id to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Item object that needs to be added to the store
+        content:
+          application/json:
+            schema:
+              schema:
+              $ref: "#/components/schemas/ItemRequest"
+        required: true
+      responses:
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"
+        '404':
+          $ref: "#/components/responses/404"
+      security:
+        - BearerAuth: [BearerAuth]
+      x-codegen-request-body-name: body
+
+    delete:
+      tags:
+      - items
+      summary: Deletes a item
+      operationId: delete_item
+      parameters:
+      - name: item_id
+        in: path
+        description: Item id to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '202':
+          description: "Item deleted"
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"
+        '404':
+          $ref: "#/components/responses/404"
+      security:
+        - BearerAuth: [BearerAuth]
+
+  /items/{item_id}/upload_image:
+    post:
+      tags:
+      - items
+      summary: Uploads an image
+      operationId: upload_file
+      parameters:
+      - name: item_id
+        in: path
+        description: ID of item to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                additionalMetadata:
+                  type: string
+                  description: Additional data to pass to server
+                file:
+                  type: string
+                  description: file to upload
+                  format: binary
+      responses:
+        201:
+          description: Created
+          content: {}
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"
+        '404':
+          $ref: "#/components/responses/404"
+      security:
+        - BearerAuth: [BearerAuth]
+
+  /users:
+    post:
+      tags:
+      - users
+      summary: Create user
+      description: This can only be done by the logged in user.
+      operationId: createUser
+      requestBody:
+        description: Created user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        201:
+          description: Created
+          content: {}
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"
+        '404':
+          $ref: "#/components/responses/404"
+      x-codegen-request-body-name: body
+    
+    put:
+      tags:
+      - users
+      summary: Updated user
+      description: This can only be done by the logged in user.
+      operationId: updateUser
+      requestBody:
+        description: Updated user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"
+        '404':
+          $ref: "#/components/responses/404"
+      security:
+        - BearerAuth: [BearerAuth]
+      x-codegen-request-body-name: body
+
+  /users/login:
+    post:
+      tags:
+      - users
+      summary: Logs user into the system
+      operationId: loginUser
+      requestBody:
+        description: The password for login in clear text
+        content:
+          application/json:
+            schema:
+              required:
+              - username
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: user1
+                password:
+                  type: string
+                  example: '@#%vbdW$%'
+        required: true
+      responses:
+        201:
+          description: Successful operation
+          headers:
+            X-Rate-Limit:
+              description: calls per hour allowed by the user
+              schema:
+                type: integer
+                format: int32
+            X-Expires-After:
+              description: date in UTC when token expires
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  api_key:
+                    type: string
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"
+        '404':
+          $ref: "#/components/responses/404"
+      x-codegen-request-body-name: user
+
+  /users/logout:
+    get:
+      tags:
+      - users
+      summary: Logs out current logged in user session
+      operationId: logoutUser
+      responses:
+        200:
+          description: successful operation
+          content: {}
+      security:
+        - BearerAuth: [BearerAuth]
+
+  /users/{username}:
+    get:
+      tags:
+      - users
+      summary: Get user by user name
+      operationId: getUserByName
+      parameters:
+      - name: username
+        in: path
+        description: 'The name that needs to be fetched. Use user1 for testing. '
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"
+        '404':
+          $ref: "#/components/responses/404"
+      security:
+        - BearerAuth: [BearerAuth]
+
+    delete:
+      tags:
+      - users
+      summary: Delete user
+      description: This can only be done by the logged in user.
+      operationId: deleteUser
+      parameters:
+      - name: username
+        in: path
+        description: The name that needs to be deleted
+        required: true
+        schema:
+          type: string
+      responses:
+        '202':
+          description: Delete successful
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"
+        '404':
+          $ref: "#/components/responses/404"
+      security:
+        - BearerAuth: [BearerAuth]
+
+  /categories:
+    get:
+      tags:
+      - categories
+      operationId: get_all_category
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"
+        '404':
+          $ref: "#/components/responses/404"
+      security:
+        - BearerAuth: [BearerAuth]
+
+  /categories/{category_id}:
+    get:
+      tags:
+      - categories
+      summary: Get a single category.
+      operationId: get_category_id
+      parameters:
+      - name: category_id
+        in: path
+        description: ID of the category to add
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"
+        '404':
+          $ref: "#/components/responses/404"
+      security:
+        - BearerAuth: [BearerAuth]
+
+    post:
+      tags:
+      - categories
+      summary: Add a new storage in the category
+      operationId: add_category
+      parameters:
+      - name: category_id
+        in: path
+        description: ID of the category to add
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        description: Item object that needs to be added to the inventory
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+        required: true
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"
+        '404':
+          $ref: "#/components/responses/404"
+      security:
+        - BearerAuth: [BearerAuth]
+      x-codegen-request-body-name: body
+
+    put:
+      tags:
+      - categories
+      summary: Update an existing category
+      operationId: update_category
+      parameters:
+      - name: category_id
+        in: path
+        description: ID of the category to add
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        description: Category object that needs to be added to the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+        required: true
+      responses:
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"
+        '404':
+          $ref: "#/components/responses/404"
+      security:
+        - BearerAuth: [BearerAuth]
+      x-codegen-request-body-name: body
+
+  /packages:
+    get:
+      tags:
+      - packages
+      operationId: get_all_package
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Package'
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"
+        '404':
+          $ref: "#/components/responses/404"
+      security:
+        - BearerAuth: [BearerAuth]
+
+    post:
+      tags:
+      - packages
+      summary: Add a new storage in the package
+      operationId: add_package
+      requestBody:
+        description: Package object that needs to be added to the inventory
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Package'
+        required: true
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Package'
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"
+        '404':
+          $ref: "#/components/responses/404"
+      security:
+        - BearerAuth: [BearerAuth]
+      x-codegen-request-body-name: body
+
+  /packages/{package_id}:
+    get:
+      tags:
+      - packages
+      summary: Get single package.
+      operationId: get_single_package
+      parameters:
+      - name: package_id
+        in: path
+        description: ID of the category to add
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Package'
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"
+        '404':
+          $ref: "#/components/responses/404"
+      security:
+        - BearerAuth: [BearerAuth]
+
+    put:
+      tags:
+      - packages
+      summary: Update an existing package
+      operationId: update_package
+      parameters:
+      - name: package_id
+        in: path
+        description: ID of the category to add
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        description: Package object that needs to be added to the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Package'
+        required: true
+      responses:
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"
+        '404':
+          $ref: "#/components/responses/404"
+      security:
+        - BearerAuth: [BearerAuth]
+      x-codegen-request-body-name: body
+
+  /storages:
+    get:
+      tags:
+      - storages
+      operationId: get_all_storage
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Storage'
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"
+        '404':
+          $ref: "#/components/responses/404"
+      security:
+        - BearerAuth: [BearerAuth]
+      
+    post:
+      tags:
+      - storages
+      summary: Add a new storage in the inventory
+      operationId: add_storage
+      parameters:
+      - name: storage_id
+        in: query
+        description: ID of the category to add
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        description: Item object that needs to be added to the inventory
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Storage'
+        required: true
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Storage'
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"
+        '404':
+          $ref: "#/components/responses/404"
+      security:
+        - BearerAuth: [BearerAuth]
+      x-codegen-request-body-name: body
+
+  /storages/{storage_id}:
+    get:
+      tags:
+      - storages
+      summary: Returns a single storage.
+      operationId: get_storage_id
+      parameters:
+      - name: storage_id
+        in: path
+        description: ID of the category to add
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Storage'
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"
+        '404':
+          $ref: "#/components/responses/404"
+      security:
+        - BearerAuth: [BearerAuth]
+
+    put:
+      tags:
+      - storages
+      summary: Update an existing storage
+      operationId: update_storage
+      parameters:
+      - name: storage_id
+        in: path
+        description: ID of the category to add
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        description: Storage object that needs to be added to the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Storage'
+        required: true
+      responses:
+        '400':
+          $ref: "#/components/responses/400"
+        '401':
+          $ref: "#/components/responses/401"
+        '404':
+          $ref: "#/components/responses/404"
+      security:
+        - BearerAuth: [BearerAuth]
+      x-codegen-request-body-name: body
+
+
+components:
+
+  schemas:
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        name:
+          type: string
+          example: Boards
+        description:
+          type: string
+          example: Boards assembled
+      required:
+      - name
+
+    Package:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        name:
+          type: string
+          example: Custom package
+        description:
+          type: string
+        width:
+          type: number
+          format: float
+          example: 3.9
+        height:
+          type: number
+          format: float
+          example: 2.6
+        length:
+          type: number
+          format: float
+          example: 1.3
+      example:
+        id: 1
+        name: "SOT-23"
+        height: 2.4
+        width: 2.9
+        length: 0.5
+
+      required:
+      - name
+
+    Storage:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1
+        name:
+          type: string
+          example: "Blue box (garage)"
+        description:
+          type: string
+          example: "A blue box located in the garage near to the bicycle stand"
+        label:
+          $ref: '#/components/schemas/Label'
+      required:
+      - name
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 2
+        username:
+          type: string
+          example: "crazy911"
+        email:
+          type: string
+          example: "crazy911@test.com"
+        password:
+          type: string
+          writeOnly: true
+          example: "5up3r53cr3t"
+      required:
+        - username
+        - email
+        - password
+
+    URL:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 322
+        link:
+          type: string
+          example: https://url/to/other/link
+        type:
+          type: string
+          enum: ["doc","other"]
+          default: doc
+
+    Tag:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 11
+        name:
+          type: string
+          example: arduino
+      required:
+      - name
+
+    Label:
+      type: object
+      readOnly: true
+      properties:
+        id:
+          type: string
+          example: "5UP3R1D"
+        data:
+          type: string
+          example: "giverishdatacontainingfileinformation"
+        path:
+          type: string
+          example: /path/to/label
+
+    ItemRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "New item"
+        description:
+          type: string
+          example: "New item to add in the db."
+        unit:
+          type: string
+          example: "12 pcs - pack"
+        quantity:
+          type: integer
+          example: 2
+        category_id:
+          type: integer
+          example: 2
+        storage_id:
+          type: integer
+          example: 2
+        package_id:
+          type: integer
+          example: 2
+      required:
+        - name
+        - description
+        - category_id
+        - unit
+        - quantity
+
+    Item:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+          example: 1212
+        name:
+          type: string
+          example: Arduino microcontroller
+        description:
+          type: string
+          example: Really long description of the example item in the inventory.
+        category:
+          $ref: '#/components/schemas/Category'
+        storage:
+          $ref: '#/components/schemas/Storage'
+        package:
+          $ref: '#/components/schemas/Package'
+        label:
+          $ref: '#/components/schemas/Label'
+        unit:
+          type: string
+          example: units
+        quantity:
+          type: integer
+          example: 3
+        urls:
+          type: array
+          items:
+            $ref: '#/components/schemas/URL'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+      required:
+      - name
+      - description
+      - unit
+      - quantity
+
+    APIError:
+      description: General API error format.
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        detail:
+          type: string
+      required:
+        - code
+        - message
+
+  responses:
+
+    400:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/APIError"
+          example:
+            code: 400
+            message: "Bad request, please check the URL you're trying to reach"
+            detail: "The server could not understand the request due to invalid syntax."
+
+    401:
+      description: Unauthorized error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/APIError"
+          example:
+            code: 401
+            message: "Unauthorized for this operation"
+            detail: "Although the HTTP standard specifies 'unauthorized', semantically this response means 
+            'unauthenticated'. That is, the client must authenticate itself to get the requested response."
+
+    403:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/APIError"
+          example:
+            code: 403
+            message: "Forbidden"
+            detail: "The client does not have access rights to the content; that is, it is unauthorized, 
+            so the server is refusing to give the requested resource. Unlike 401, the client's identity is known to the server."
+
+    404:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/APIError"
+          example:
+            code: 404
+            message: "URL requested not found"
+            detail: "The server can not find the requested resource. In the browser, this means the URL is not recognized."
+
+    503:
+      description: Service Unavailable
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/APIError"
+          example:
+            code: 404
+            message: "Service Unavailable"
+            detail: "The server is not ready to handle the request. Common causes are a server that 
+            is down for maintenance or that is overloaded."
+         
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
